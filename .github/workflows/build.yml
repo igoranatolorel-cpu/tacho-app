@@ -23,10 +23,14 @@ jobs:
         pip install --upgrade pip setuptools
         pip install "cython<3.0.0" buildozer
 
+    - name: Cache Buildozer global directory
+      uses: actions/cache@v4
+      with:
+        path: ~/.buildozer
+        key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
+
     - name: Build APK with Buildozer
       run: |
-        yes | buildozer init
-        sed -i 's/# android.accept_sdk_license = False/android.accept_sdk_license = True/g' buildozer.spec
         yes | buildozer -v android debug
 
     - name: Upload APK Artifact
